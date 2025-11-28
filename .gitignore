@@ -1,0 +1,45 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go build artifacts
+bin/
+build/
+dist/
+*.a
+
+# Go test cache
+*.test
+
+# Dependency directories (if you use vendor)
+vendor/
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# Private keys (just to be safe)
+*.pem
+*.key
+
+# Temporary files
+*.tmp
+tmp/
