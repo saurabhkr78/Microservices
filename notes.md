@@ -22,3 +22,26 @@ Steps for grpc file generation -
     create the pb folder in your project and go to parent of this pb folder and then follow the below steps
     add this to account.proto - option go_package = "./pb";
     finally run this command - protoc --go_out=./pb --go-grpc_out=./pb account.proto
+
+#reference for repository and service files
+
+clean architecture flow
+interface → struct → constructor → methods
+
+Define an interface
+Define a struct implementing that interface
+Provide a constructor
+Implement methods
+
+Because Go doesn’t have classes.
+
+So instead of classes, we use:
+
+    interfaces → define behavior
+
+    structs → hold data
+
+    methods → attach behavior to structs
+
+    constructors → create objects
+
