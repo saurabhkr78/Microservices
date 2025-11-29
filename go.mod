@@ -1,4 +1,4 @@
-module Microservices
+module github.com/saurabh/Microservices
 
 go 1.24.0
 
@@ -9,6 +9,11 @@ tool github.com/99designs/gqlgen
 require (
 	github.com/99designs/gqlgen v0.17.44
 	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/lib/pq v1.10.9
+	github.com/segmentio/ksuid v1.0.4
+	github.com/tinrab/retry v1.0.0
+	google.golang.org/grpc v1.77.0
+	google.golang.org/protobuf v1.36.10
 )
 
 require (
@@ -24,8 +29,11 @@ require (
 	github.com/vektah/gqlparser/v2 v2.5.31 // indirect
 	github.com/xrash/smetrics v0.0.0-20250705151800-55b8f293f342 // indirect
 	golang.org/x/mod v0.30.0 // indirect
+	golang.org/x/net v0.47.0 // indirect
 	golang.org/x/sync v0.18.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
 	golang.org/x/text v0.31.0 // indirect
 	golang.org/x/tools v0.39.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20251022142026-3a174f9686a8 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

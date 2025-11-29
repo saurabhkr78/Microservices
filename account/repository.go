@@ -6,16 +6,20 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// interface for account repository
 type Repository interface {
 	Close()
 	GetAccountByID(ctx context.Context, id string) (*Account, error)
 	ListAccounts(ctx context.Context, skip uint64, take uint64) ([]Account, error)
 	PutAccount(ctx context.Context, a Account) error
 }
+
+// struct for Postgres repository to implement Repository interface
 type postgresRepository struct {
 	db *sql.DB
 }
 
+// constructor for Postgres repository the New Keyword is used to indicate that this function is a constructor
 func NewPostgresRepository(url string) (Repository, error) {
 	db, err := sql.Open("postgres", url)
 	if err != nil {
