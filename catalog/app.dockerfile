@@ -1,42 +1,35 @@
-# ---------- BUILD STAGE ----------
-FROM golang:1.22-alpine AS build
+# -----------------------------
+# Build Stage
+# -----------------------------
+FROM golang:1.24.0-alpine3.20 AS build
 
-# Disable CGO → static binary
-ENV CGO_ENABLED=0 \
-    GOOS=linux \
-    GOARCH=amd64
+# Install required tools
+RUN apk --no-cache add gcc g++ make ca-certificates
 
-WORKDIR /app
+# Set working directory
+WORKDIR /github.com/saurabh/Microservices
 
-# Install certificates (needed during go mod download)
-RUN apk add --no-cache ca-certificates
-
-# Copy go modules
+# Copy module files
 COPY go.mod go.sum ./
-RUN go mod download
 
-# Copy the rest of the source code
-COPY . .
+# Copy vendor + services
+COPY vendor vendor
+COPY account account
+COPY catalog catalog
+COPY order order
 
-# Build your gRPC server
-RUN go build -o server ./account/cmd/account
+# Build the binary
+RUN go build -mod=vendor -o /go/bin/app ./order/cmd/order
 
+# -----------------------------
+# Runtime Stage
+# -----------------------------
+FROM alpine:3.20
 
-# ---------- RUNTIME STAGE ----------
-FROM alpine:3.18
+WORKDIR /usr/bin
 
-# Install certificates so HTTPS works
-RUN apk add --no-cache ca-certificates
-
-WORKDIR /app
-
-# Copy binary from build stage
-COPY --from=build /app/server .
-
-# Security: Run as non-root user
-RUN adduser -D appuser
-USER appuser
+# Copy only the built binary
+COPY --from=build /go/bin/app .
 
 EXPOSE 8080
-
-CMD ["./server"]
+CMD ["./app"]

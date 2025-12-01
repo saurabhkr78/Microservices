@@ -44,7 +44,8 @@ func NewElasticRepository(url string) (Repository, error) {
 	return &elasticRepository{client}, nil
 
 }
-func (r *elasticRepository) Close() {}
+func (r *elasticRepository) Close() {
+}
 
 func (r *elasticRepository) PutProduct(ctx context.Context, p Product) error {
 	_, err := r.Client.Index().
