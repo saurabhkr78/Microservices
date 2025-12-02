@@ -1,8 +1,8 @@
-schema:schema.graphql
+schema: schema.graphql
 
 models:
   Account:
-    model:Microservices/graphql.Account
+    model: github.com/saurabh/Microservices/graphql.Account
     fields:
       orders:
-        resolver:true
+        resolver: true

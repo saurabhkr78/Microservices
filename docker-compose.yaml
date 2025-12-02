@@ -1,9 +1,155 @@
 
 services:
+  # ------------------------------------------------------------
+  # ACCOUNT SERVICE
+  # ------------------------------------------------------------
   account:
+    build: ./account
+    container_name: account-service
+    restart: always
+    depends_on:
+      account_db:
+        condition: service_healthy
+    environment:
+      DB_URL: postgres://postgres:postgres@account_db:5432/account?sslmode=disable
+    networks:
+      - mononet
+    ports:
+      - "8001:8001"
+
+  # ------------------------------------------------------------
+  # ORDER SERVICE
+  # ------------------------------------------------------------
   order:
+    build: ./order
+    container_name: order-service
+    restart: always
+    depends_on:
+      order_db:
+        condition: service_healthy
+      account:
+        condition: service_started
+      catalog:
+        condition: service_started
+    environment:
+      ACCOUNT_SERVICE_URL: http://account:8001
+      CATALOG_SERVICE_URL: http://catalog:8003
+      DB_URL: postgres://postgres:postgres@order_db:5432/order?sslmode=disable
+    networks:
+      - mononet
+    ports:
+      - "8002:8002"
+
+  # ------------------------------------------------------------
+  # CATALOG SERVICE
+  # ------------------------------------------------------------
   catalog:
+    build: ./catalog
+    container_name: catalog-service
+    restart: always
+    depends_on:
+      catalog_db:
+        condition: service_healthy
+    environment:
+      DB_URL: postgres://postgres:postgres@catalog_db:5432/catalog?sslmode=disable
+    networks:
+      - mononet
+    ports:
+      - "8003:8003"
+
+  # ------------------------------------------------------------
+  # GRAPHQL GATEWAY SERVICE
+  # ------------------------------------------------------------
   graphql:
+    build: ./graphql
+    container_name: graphql-gateway
+    restart: always
+    depends_on:
+      - account
+      - order
+      - catalog
+    environment:
+      ACCOUNT_SERVICE_URL: http://account:8001
+      ORDER_SERVICE_URL: http://order:8002
+      CATALOG_SERVICE_URL: http://catalog:8003
+    networks:
+      - mononet
+    ports:
+      - "8080:8080"
+
+  # ------------------------------------------------------------
+  # ACCOUNT DATABASE
+  # ------------------------------------------------------------
   account_db:
+    image: postgres:16
+    container_name: account-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: account
+    volumes:
+      - account_data:/var/lib/postgresql/data
+    networks:
+      - mononet
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 10
+
+  # ------------------------------------------------------------
+  # ORDER DATABASE
+  # ------------------------------------------------------------
   order_db:
+    image: postgres:16
+    container_name: order-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: order
+    volumes:
+      - order_data:/var/lib/postgresql/data
+    networks:
+      - mononet
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 10
+
+  # ------------------------------------------------------------
+  # CATALOG DATABASE
+  # ------------------------------------------------------------
   catalog_db:
+    image: postgres:16
+    container_name: catalog-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: catalog
+    volumes:
+      - catalog_data:/var/lib/postgresql/data
+    networks:
+      - mononet
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 10
+
+# ------------------------------------------------------------
+# NETWORKS + VOLUMES
+# ------------------------------------------------------------
+networks:
+  mononet:
+
+volumes:
+  account_data:
+  order_data:
+  catalog_data:
