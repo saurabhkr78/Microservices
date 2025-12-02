@@ -6,28 +6,9 @@ This project is a demonstration of a microservices architecture using Go, gRPC, 
 
 The architecture is designed to be scalable and maintainable. Each service is responsible for a specific domain and communicates with others via gRPC. The `graphql-gateway` acts as a single entry point for clients, aggregating data from the other services.
 
-Here is a high-level overview of the architecture: 
-[link](https://whimsical.com/microservices-Xgqs3Q7ZjExthBh7qLZUS3)
+Here is a high-level overview of the architecture:
 
-```
-+-------------------+      +-------------------+      +-------------------+
-|                   |      |                   |      |                   |
-|  Account Service  | <--- |  GraphQL Gateway  | ---> |   Order Service   |
-|                   |      |                   |      |                   |
-+-------------------+      +-------------------+      +-------------------+
-        ^                            |                            ^
-        |                            |                            |
-        v                            v                            v
-+-------------------+      +-------------------+      +-------------------+
-|  Account Database |      |   Catalog Service |      |   Order Database  |
-+-------------------+      +-------------------+      +-------------------+
-                                     ^
-                                     |
-                                     v
-                             +-------------------+
-                             | Catalog Database  |
-                             +-------------------+
-```
+![Architecture Diagram](img/Microservices.png)
 
 ### Services
 
